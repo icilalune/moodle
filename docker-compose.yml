@@ -1,0 +1,25 @@
+version: "2"
+services:
+  moodle:
+    build: .
+    environment:
+      MOODLE_DB_TYPE: mysqli
+      MOODLE_DB_NAME: moodle
+      MOODLE_DB_USER: moodle
+      MOODLE_DB_PASS: moodle
+      MOODLE_DB_HOST: mysql
+      MOODLE_WWW_ROOT: http://moodle.docker
+    labels:
+      traefik.frontend.rule: "Host:moodle.docker"
+    volumes:
+      - ./.docker-compose/moodledata:/moodledata
+  mysql:
+    image: mysql:5.7
+    command: --max-allowed-packet=16777216
+    environment:
+      MYSQL_RANDOM_ROOT_PASSWORD: "yes"
+      MYSQL_USER: moodle
+      MYSQL_PASSWORD: moodle
+      MYSQL_DATABASE: moodle
+    volumes:
+      - ./.docker-compose/mysqldata:/var/lib/mysql
